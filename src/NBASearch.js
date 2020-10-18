@@ -19,7 +19,7 @@ function NBASearch() {
 
     async function getNBAPlayers() {
 
-        const url = 'https://data.nba.net/10s/prod/v1/2019/players.json';
+        const url = 'https://cors-anywhere.herokuapp.com/https://data.nba.net/10s/prod/v1/2019/players.json';
 
         
         if (searchField !== undefined) {
