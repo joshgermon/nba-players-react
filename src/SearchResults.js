@@ -11,24 +11,35 @@ export function SearchResults(props) {
             spacing={6}>
             {props.players.map(playerInfo => {
                 return (
-                    <Grid item xs={12} sm={6} md={4} key={playerInfo.personId}>
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={playerInfo.personId}>
+                        
                         <Card>
-                            <img src={"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/1040x760/" + playerInfo.personId + ".png"} alt={playerInfo.firstName} width="300px" />
-                            <div>
+                            <div className="img-wrapper">
+                                <img className="player-img" src={"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/1040x760/" + playerInfo.personId + ".png"} alt={playerInfo.firstName} width="300px" />
+                            </div>
+                            <div className="card-head">
                                 <Typography variant="h6" >{playerInfo.firstName} {playerInfo.lastName}</Typography>
                                 <Typography variant="subtitle2" color="textSecondary">{playerInfo.currentTeam.teamName}</Typography>
-                                </div>
+                                <img src={'https://www.nba.com/assets/logos/teams/primary/web/' + playerInfo.currentTeam.abbreviation + '.svg'} alt="Team Logo" width="60px" />
+                            </div>
                             <CardContent>
-                                <img src={'https://www.nba.com/assets/logos/teams/primary/web/'+ playerInfo.currentTeam.abbreviation +'.svg'} alt="Team Logo" width ="60px" />
+                                <div className="player-info-labels">
+                                    <Typography variant="subtitle2" color="textSecondary">POSITION</Typography>
+                                    <Typography variant='body1' color="textSecondary" gutterBottom>{getFullPosition(playerInfo.pos)}</Typography>
+                                </div>
+                                <div className="player-info-labels">
+                                    <Typography variant="subtitle2" color="textSecondary">HEIGHT</Typography>
+                                    <Typography variant='body1' color="textSecondary" gutterBottom>{playerInfo.heightFeet}'{playerInfo.heightInches}"</Typography> 
+                                </div>
+                                <div className="player-info-labels">
+                                    <Typography variant="subtitle2" color="textSecondary">WEIGHT</Typography>
+                                    <Typography variant='body1' color="textSecondary" gutterBottom>{playerInfo.weightPounds}lbs</Typography>
+                                </div>
+                                <div className="player-info-labels">
+                                    <Typography variant="subtitle2" color="textSecondary">YEARS PRO</Typography>
+                                    <Typography variant='body1' color="textSecondary" gutterBottom>Year {playerInfo.yearsPro}</Typography>
+                                </div>
         
-                                {playerInfo.pos ?
-                                    <Typography variant='body1'  color="textSecondary" gutterBottom>{getFullPosition(playerInfo.pos)}</Typography> : null}
-                                {playerInfo.heightFeet ?
-                                    <Typography variant='body1' color="textSecondary" gutterBottom>{playerInfo.heightFeet}'{playerInfo.heightInches}"</Typography> : null}
-                                {playerInfo.weightPounds ?
-                                    <Typography variant='body1' color="textSecondary" gutterBottom>{playerInfo.weightPounds}lbs</Typography> : null}
-                                {playerInfo.yearsPro ?
-                                    <Typography variant='body1' color="textSecondary" gutterBottom>Year {playerInfo.yearsPro}</Typography> : null}
                             </CardContent>
                             <CardActions>
                                 <Button size="small" onClick={() => window.open("https://stats.nba.com/player/" + playerInfo.personId)}>View Stats</Button>
@@ -43,7 +54,7 @@ export function SearchResults(props) {
 
 //Changes single letter position into full word
 function getFullPosition(pos) {
-    switch(pos) {
+    switch (pos) {
         case 'G':
         case 'G-F':
             return 'Guard';

@@ -9,7 +9,9 @@ function App() {
   return (
     <CssBaseline>
     <Container className="App">
-      <img src={logo} width="90px" alt="NBA Logo" />
+      <div className="logo">
+        <img className="logo" src={logo} width="90px" alt="NBA Logo" />
+      </div>
       <NBASearch />
     </Container>
     </CssBaseline>

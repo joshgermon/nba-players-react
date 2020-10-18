@@ -3,8 +3,7 @@ import { SearchResults } from './SearchResults';
 import { Grid, Button, TextField } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import teams from './Teams';
-
-
+import { CSSTransition } from "react-transition-group";
 
 
 function NBASearch() {
@@ -13,6 +12,7 @@ function NBASearch() {
     const [isLoading, setIsLoading] = useState();
     const [fullNbaData, setFullNbaData] = useState();
     const [nbaData, setNbaData] = useState();
+    const [showResults, setShowResults] = useState();
 
 
     // Fetch API Stats & Update State
@@ -30,6 +30,7 @@ function NBASearch() {
                 console.log(playerData);
                 setFullNbaData(playerData);
                 setNbaData(filterPlayersResponse(playerData, searchField));
+                setShowResults(true);
                 setIsLoading(false);
                 console.log("Using API Call");
             } else {
@@ -64,7 +65,11 @@ function NBASearch() {
             </div>
             <Button onClick={getNBAPlayers} variant="contained" size="large" startIcon={<SearchIcon />}>Find</Button>
             {isLoading ? <p className="load-indicator">Loading...</p> : <p></p>}
-            {nbaData ? <SearchResults players={nbaData} /> : null}
+                
+            <CSSTransition in={showResults} timeout={800}  classNames="pl-card" unmountOnExit>
+                <SearchResults players={nbaData} /> 
+            </CSSTransition>
+            
         </Grid>
     );
 }

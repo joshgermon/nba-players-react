@@ -1,3 +1,7 @@
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -13,8 +17,50 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.logo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo img {
+  max-width: 90px;
+}
 
 .search-box {
   margin-bottom: 20px;
-  width: 400px;
+  min-width: 300px;
+}
+.img-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-head {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.player-info-labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.pl-card-enter {
+  opacity: 0;
+}
+.pl-card-enter-active {
+  opacity: 1;
+  transition: opacity ease-in 800ms;
+}
+.pl-card-exit {
+  opacity: 1;
+}
+.pl-card-exit-active {
+  opacity: 0;
+  transition: opacity ease-out 200ms;
 }
