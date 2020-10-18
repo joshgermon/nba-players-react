@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 
-const players = require('./players.json');
-
 
 function NBASearch() {
-    
+
     const [searchField, setSearchField] = useState();
     const [isLoading, setIsLoading] = useState();
+    const [fullNbaData, setFullNbaData] = useState();
     const [nbaData, setNbaData] = useState();
+
 
     // Fetch API Stats & Update State
 
-    function getNBAPlayerStats() {
+    async function getNBAPlayerStats() {
         //Filter Local JSON Player data
         // console.log(players.filter(player => player.firstName.includes(searchField)));
 
@@ -28,16 +28,33 @@ function NBASearch() {
         // console.log("Fetching:" + urlSearch);
 
         setIsLoading(true);
-        fetch(url)
-            .then(res => res.json())
-            .then(data => setNbaData(filterPlayersResponse(data.league.standard, searchField)))
-            .then(setIsLoading(false));
+
+        if (!fullNbaData) {
+            const playerRes = await fetch(url);
+            const playerData = await playerRes.json();
+            setFullNbaData(playerData);
+            setNbaData(filterPlayersResponse(playerData.league.standard, searchField));
+            setIsLoading(false);
+            console.log("using API Call");
+        } else {
+            setNbaData(filterPlayersResponse(fullNbaData.league.standard, searchField));
+            setIsLoading(false);
+            console.log("using Full NBA Data in State");
+        }
+
+
+        
+        // fetch(url)
+        //     .then(res => res.json())
+        //     .then(data => setNbaData(filterPlayersResponse(data.league.standard, searchField)))
+        //     .then(setIsLoading(false));
+
+
     }
 
     function handleChange(e) {
         e.preventDefault();
         setSearchField(e.target.value);
-        console.log('Changed');
     }
 
     return (
@@ -55,46 +72,49 @@ function NBASearch() {
 // Display list of Players Returned
 
 function SearchResults(props) {
-    return(
-    <div>
-        {props.players.map(playerInfo => {
-            return (
-            <div key={playerInfo.personId}>
-                <img src={"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/1040x760/"+ playerInfo.personId +".png"} alt={playerInfo.firstName} />
-                <h3 className="player-name">{playerInfo.firstName} {playerInfo.lastName}</h3>
-                <div className="player-info">
-                {playerInfo.pos ?
-                    <p>Position: {playerInfo.pos}</p> : null}
-                {playerInfo.heightFeet ?
-                    <p>Height: {playerInfo.heightFeet}'{playerInfo.heightInches}"</p> : null }
-                {playerInfo.weightPounds ?
-                    <p>Weight: {playerInfo.weightPounds}lbs</p> : null}
-                </div>
-                
-            </div>
-            )
-        })}
-    </div>
+    return (
+        <div>
+            {props.players.map(playerInfo => {
+                return (
+                    <div key={playerInfo.personId}>
+                        <img src={"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/1040x760/" + playerInfo.personId + ".png"} alt={playerInfo.firstName} width="400px" />
+                        <h3 className="player-name">{playerInfo.firstName} {playerInfo.lastName}</h3>
+                        <div className="player-info">
+                            {playerInfo.pos ?
+                                <p>Position: {playerInfo.pos}</p> : null}
+                            {playerInfo.heightFeet ?
+                                <p>Height: {playerInfo.heightFeet}'{playerInfo.heightInches}"</p> : null}
+                            {playerInfo.weightPounds ?
+                                <p>Weight: {playerInfo.weightPounds}lbs</p> : null}
+                        </div>
+
+                    </div>
+                )
+            })}
+        </div>
     );
 }
 
+
+// async function apiCall() {
+//     const playerURL = 'https://data.nba.net/10s/prod/v1/2019/players.json';
+//     const playerRes = await fetch(url);
+//     const playerData = await playerRes.json();
+//     return playerData;
+// }
 
 //Filter Search Results & Add Picture if Available
 
 function filterPlayersResponse(res, query) {
     // Look into updating with Regex 'i' to test for contains case insensitive
     const searchRes = res.filter(player => player.firstName.toLowerCase().startsWith(query.toLowerCase()));
-    for(var i = 0; i < searchRes.length; i++) {
-        searchRes[i].headshot = getPlayerImage(searchRes[i].firstName, searchRes[i].lastName);
-        console.log("data updating on number: " + i);
-    }
     return searchRes;
 }
 
 //Iterate over players adding a Player Image value from different API
 
 function addPlayerImage(data) {
-    for(var i = 0; i < data.data.length; i++) {
+    for (var i = 0; i < data.data.length; i++) {
         data.data[i].player_image = getPlayerImage(data.data[i].first_name, data.data[i].last_name);
         console.log("data updating on number: " + i);
     }
@@ -106,10 +126,10 @@ function addPlayerImage(data) {
 //Retrieve Player Image from https://nba-players.herokuapp.com/
 
 function getPlayerImage(fname, lname) {
-    const firstName = fname.replace(/ /g,"_");
-    const lastName = lname.replace(/ /g,"_");
+    const firstName = fname.replace(/ /g, "_");
+    const lastName = lname.replace(/ /g, "_");
     console.log("https://nba-players.herokuapp.com/players/" + lastName + '/' + firstName);
-    return( "https://nba-players.herokuapp.com/players/" + lastName + '/' + firstName);
+    return ("https://nba-players.herokuapp.com/players/" + lastName + '/' + firstName);
 }
 
 
