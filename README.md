@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Search Active NBA Players
+
+Interactive UI to search through Active NBA Players. Displays their team & team logo as well as their headshot.
 
 ## Available Scripts
 
